@@ -4,6 +4,7 @@ import (
 "github.com/gin-gonic/gin"
 "net/http"
 "time"
+	"github.com/lexkong/log"
 )
 //指定字段的tag  (`json:"name"`)，实现json字符串的首字母小写
 type Resp struct {
@@ -28,6 +29,7 @@ func Create(c *gin.Context)  {
 		"create",
 		time.Now().Unix(),
 	}
+	log.Infof(" user Create \n")
 	c.JSON(http.StatusOK,resp)
 }
 

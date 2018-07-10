@@ -7,9 +7,23 @@ import (
 	"time"
 	"apiserver/router"
 	"apiserver/handler/user"
+	"github.com/spf13/pflag"
+	"apiserver/config"
+	"github.com/spf13/viper"
+)
+
+var (
+	cfg = pflag.StringP("config", "c", "", "apiserver config file path.")
 )
 
 func main()  {
+	pflag.Parse()
+
+	fmt.Println(*cfg)
+	if err := config.Init(*cfg); err != nil {
+		panic(err)
+	}
+
 	fmt.Println("hello world")
 
 	fmt.Println(time.Now())
@@ -67,5 +81,5 @@ func main()  {
 
 	router.Load(r)
 
-	r.Run(":8080")
+	r.Run(viper.GetString("addr"))
 }
