@@ -3,13 +3,12 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"fmt"
-	"time"
 	"apiserver/router"
-	"apiserver/handler/user"
 	"github.com/spf13/pflag"
 	"apiserver/config"
 	"github.com/spf13/viper"
+	"apiserver/model"
+	"apiserver/router/middleware"
 )
 
 var (
@@ -18,15 +17,12 @@ var (
 
 func main()  {
 	pflag.Parse()
-
-	fmt.Println(*cfg)
 	if err := config.Init(*cfg); err != nil {
 		panic(err)
 	}
 
-	fmt.Println("hello world")
-
-	fmt.Println(time.Now())
+	model.DB.Init()
+	defer model.DB.Close()
 
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) {
@@ -77,9 +73,14 @@ func main()  {
 		})
 	})
 
-	r.GET("user/info", user.GetUserInfo)
+	//r.GET("user/info", user.GetUserInfo)
+	//r.GET("/errno",user.TestErron) //错误码
+	router.Load(
+		r,
 
-	router.Load(r)
+		middleware.Logging(),
+		middleware.RequestId(),
+	)
 
 	r.Run(viper.GetString("addr"))
 }

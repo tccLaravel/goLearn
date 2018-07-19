@@ -13,12 +13,14 @@ log:
   log_rotate_size: 1
   log_backup_count: 7
 db:
-  name: mini
+  name: test
   addr: 127.0.0.1:3306
   username: root
   password: root
 docker_db:
-  name: mini
+  name: test
   addr: 127.0.0.1:3306
   username: root
   password: root
+gormlog: true
+jwt_secret: tcc1015
